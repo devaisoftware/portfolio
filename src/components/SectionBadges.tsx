@@ -1,53 +1,63 @@
 import React, { useState, useEffect } from 'react';
+import { Home, User, Settings, MessageSquare, Mail, HelpCircle } from 'lucide-react';
 
 const sections = [
-  { id: 'home', icon: 'fa-home' },
-  { id: 'about', icon: 'fa-user' },
-  { id: 'services', icon: 'fa-cogs' },
-  { id: 'testimonials', icon: 'fa-comments' },
-  { id: 'contact', icon: 'fa-envelope' },
-  { id: 'faq', icon: 'fa-question' },
+  { id: 'home', icon: Home },
+  { id: 'about', icon: User },
+  { id: 'services', icon: Settings },
+  { id: 'testimonials', icon: MessageSquare },
+  { id: 'contact', icon: Mail },
+  { id: 'faq', icon: HelpCircle },
 ];
 
 const SectionBadges: React.FC = () => {
   const [activeSection, setActiveSection] = useState('home');
 
   useEffect(() => {
-    const handleScroll = () => {
-      const fromTop = window.scrollY + window.innerHeight / 2;
-      
-      sections.forEach(({ id }) => {
-        const section = document.getElementById(id);
-        if (section) {
-          const rect = section.getBoundingClientRect();
-          const sectionTop = rect.top + window.scrollY;
-          const sectionBottom = sectionTop + rect.height;
-          
-          if (fromTop >= sectionTop && fromTop <= sectionBottom) {
-            setActiveSection(id);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveSection(entry.target.id);
           }
-        }
-      });
-    };
+        });
+      },
+      {
+        rootMargin: '-50% 0px -50% 0px',
+        threshold: 0,
+      }
+    );
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    sections.forEach(({ id }) => {
+      const el = document.getElementById(id);
+      if (el) {
+        observer.observe(el);
+      }
+    });
+
+    return () => observer.disconnect();
   }, []);
+
+  const scrollToSection = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   return (
     <div className="fixed left-6 top-1/2 transform -translate-y-1/2 z-40 hidden lg:flex flex-col gap-4">
-      {sections.map(({ id, icon }) => (
-        <div
+      {sections.map(({ id, icon: Icon }) => (
+        <button
           key={id}
-          className={`w-9 h-9 rounded-full flex items-center justify-center shadow-brand transition-all duration-300 ${
+          onClick={() => scrollToSection(id)}
+          className={`w-9 h-9 rounded-full flex items-center justify-center shadow-brand transition-all duration-300 cursor-pointer ${
             activeSection === id
               ? 'bg-accent-500 text-white opacity-100 scale-110 shadow-glow'
               : 'bg-white dark:bg-neutral-800 text-primary-600 dark:text-primary-400 opacity-50 hover:opacity-75'
           }`}
           title={id.charAt(0).toUpperCase() + id.slice(1)}
+          aria-label={`Go to ${id} section`}
         >
-          <i className={`fas ${icon} text-sm`} />
-        </div>
+          <Icon className="w-5 h-5" />
+        </button>
       ))}
     </div>
   );

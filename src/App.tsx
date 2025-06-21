@@ -1,15 +1,7 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { ThemeProvider } from './contexts/ThemeContext';
 import Header from './components/Header';
 import Hero from './components/Hero';
-import About from './components/About';
-import ServicesCarousel from './components/ServicesCarousel';
-import Technologies from './components/Technologies';
-import Services from './components/Services';
-import ProcessTimeline from './components/ProcessTimeline';
-import Testimonials from './components/Testimonials';
-import Contact from './components/Contact';
-import FAQ from './components/FAQ';
 import Footer from './components/Footer';
 import ProgressBar from './components/ProgressBar';
 import ScrollIndicator from './components/ScrollIndicator';
@@ -20,6 +12,16 @@ import ConfettiCanvas from './components/ConfettiCanvas';
 import ParticleBackground from './components/ParticleBackground';
 import LoadingScreen from './components/LoadingScreen';
 import CursorTrail from './components/CursorTrail';
+import Spinner from './components/Spinner';
+
+const About = React.lazy(() => import('./components/About'));
+const ServicesCarousel = React.lazy(() => import('./components/ServicesCarousel'));
+const Technologies = React.lazy(() => import('./components/Technologies'));
+const Services = React.lazy(() => import('./components/Services'));
+const ProcessTimeline = React.lazy(() => import('./components/ProcessTimeline'));
+const Testimonials = React.lazy(() => import('./components/Testimonials'));
+const Contact = React.lazy(() => import('./components/Contact'));
+const FAQ = React.lazy(() => import('./components/FAQ'));
 
 function App() {
   return (
@@ -36,14 +38,16 @@ function App() {
         <Header />
         <main className="relative z-10">
           <Hero />
-          <ServicesCarousel />
-          <About />
-          <Technologies />
-          <Services />
-          <ProcessTimeline />
-          <Testimonials />
-          <Contact />
-          <FAQ />
+          <Suspense fallback={<Spinner />}>
+            <ServicesCarousel />
+            <About />
+            <Technologies />
+            <Services />
+            <ProcessTimeline />
+            <Testimonials />
+            <Contact />
+            <FAQ />
+          </Suspense>
         </main>
         <Footer />
         

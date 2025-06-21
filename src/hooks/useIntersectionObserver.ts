@@ -5,33 +5,34 @@ interface UseIntersectionObserverProps {
   rootMargin?: string;
 }
 
-export const useIntersectionObserver = ({
+export const useIntersectionObserver = <T extends HTMLElement>({
   threshold = 0.15,
   rootMargin = '0px'
 }: UseIntersectionObserverProps = {}) => {
   const [isVisible, setIsVisible] = useState(false);
-  const ref = useRef<HTMLElement>(null);
+  const ref = useRef<T>(null);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
+        if (entry.isIntersecting !== isVisible) {
+          setIsVisible(entry.isIntersecting);
         }
       },
       { threshold, rootMargin }
     );
 
-    if (ref.current) {
-      observer.observe(ref.current);
+    const currentRef = ref.current;
+    if (currentRef) {
+      observer.observe(currentRef);
     }
 
     return () => {
-      if (ref.current) {
-        observer.unobserve(ref.current);
+      if (currentRef) {
+        observer.unobserve(currentRef);
       }
     };
-  }, [threshold, rootMargin]);
+  }, [threshold, rootMargin, isVisible]);
 
   return { ref, isVisible };
 };
