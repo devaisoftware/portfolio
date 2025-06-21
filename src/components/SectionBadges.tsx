@@ -5,8 +5,8 @@ const sections = [
   { id: 'about', icon: 'fa-user' },
   { id: 'services', icon: 'fa-cogs' },
   { id: 'testimonials', icon: 'fa-comments' },
-  { id: 'faq', icon: 'fa-question' },
   { id: 'contact', icon: 'fa-envelope' },
+  { id: 'faq', icon: 'fa-question' },
 ];
 
 const SectionBadges: React.FC = () => {

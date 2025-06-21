@@ -10,7 +10,7 @@ const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="bg-gradient-to-r from-primary-500 to-secondary-500 text-white py-16 dark:bg-neutral-900/95">
+    <footer className="bg-gradient-to-r from-primary-500 to-secondary-500 dark:bg-none dark:bg-neutral-900/95 text-white py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Company Info */}
